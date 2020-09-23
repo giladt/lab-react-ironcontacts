@@ -1,16 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import contacts from '../contacts.json';
+import Contact from './Contact';
 
 class ContactsTable extends Component {
-
-  contactElement = (contact) => (
-    <tr key={contact.id} name={contact.name} popularity={contact.popularity}>
-      <td><img src={contact.pictureUrl} alt={contact.name} height="75px"/></td>
-      <td>{contact.name}</td>
-      <td>{contact.popularity}</td>
-      <td><button onClick={this.removeContact} id={contact.id}>Delete</button></td>
-    </tr>
-  )
 
   state = {
     contactList: contacts.slice(0,5)
@@ -27,7 +19,6 @@ class ContactsTable extends Component {
 
   addRandomContact = (e)=>{
     e.preventDefault();
-    console.log('len', this.state.contactList.length);
     if(this.state.contactList.length > contacts.length) return;
     this.setState({
       contactList: [
@@ -39,7 +30,6 @@ class ContactsTable extends Component {
 
   sortByName = (e)=>{
     e.preventDefault();
-    console.log(this.state.contactList);
     this.setState({
       contactList: [
         ...this.state.contactList.sort((a,b) => a.name.localeCompare(b.name))
@@ -58,12 +48,8 @@ class ContactsTable extends Component {
 
   removeContact = (e)=>{
     e.preventDefault();
-    console.log(e.target.id);
     let temp = [...this.state.contactList].filter(contact => contact.id !== e.target.id);
-
-    this.setState({
-      contactList: temp
-    })
+    this.setState({contactList: temp});
   }
 
   render() {
@@ -84,7 +70,7 @@ class ContactsTable extends Component {
           </thead>
           <tbody>
             {this.state.contactList.map(contact => {
-              return this.contactElement(contact)
+              return <Contact handleEvent={this.removeContact}>{contact}</Contact>
             })}
           </tbody>
         </table>
