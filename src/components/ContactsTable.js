@@ -8,22 +8,20 @@ class ContactsTable extends Component {
     contactList: contacts.slice(0,5)
   }
 
-  getRandomContact(){
-    let contactItem = Math.floor(Math.random() * (contacts.length - 1));
-    while(this.state.contactList.filter(contact => contact.id === contacts[contactItem].id).length > 0) {
-      contactItem = Math.floor(Math.random() * (contacts.length - 1));
+  addRandomContact = ()=>{
+    let randomContact = contacts[Math.floor(Math.random() * (contacts.length))];
+
+    if(this.state.contactList.find(contact => contact.id === randomContact.id)) {
+      if(this.state.contactList.length < contacts.length) {
+        this.addRandomContact();
+      }
+      return;
     }
 
-    return contacts[contactItem];
-  }
-
-  addRandomContact = (e)=>{
-    e.preventDefault();
-    if(this.state.contactList.length > contacts.length) return;
     this.setState({
       contactList: [
-        ...this.state.contactList, 
-        this.getRandomContact()
+        ...this.state.contactList,
+        randomContact
       ]
     })
   }
@@ -70,7 +68,7 @@ class ContactsTable extends Component {
           </thead>
           <tbody>
             {this.state.contactList.map(contact => {
-              return <Contact handleEvent={this.removeContact}>{contact}</Contact>
+              return <Contact key={contact.id} handleEvent={this.removeContact}>{contact}</Contact>
             })}
           </tbody>
         </table>
